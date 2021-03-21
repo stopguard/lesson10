@@ -9,3 +9,68 @@ r"""
 Выполнить общий подсчёт расхода ткани.
     Реализовать абстрактные классы для основных классов проекта и проверить работу декоратора @property.
 """
+from abc import ABC, abstractmethod
+
+
+class Clothes(ABC):
+    all_fabric = 0
+
+    @abstractmethod
+    def fabric(self):
+        pass
+
+
+class Coat(Clothes):
+
+    def __init__(self, v: int, name: str):
+        if v > 0:
+            self.v = v
+        else:
+            raise ValueError('Требуется ввести положительное число')
+        self.name = name
+        Clothes.all_fabric += self.fabric
+
+    def __str__(self):
+        return f'Пальто "{self.name}". Размер {self.v}.\nРасход ткани: {self.fabric}.'
+
+    @property
+    def fabric(self):
+        return round(self.v / 6.5 + 0.5 + 5 / 10 ** 8, 2)
+
+
+class Suit(Clothes):
+
+    def __init__(self, h: int, name: str):
+        if h > 0:
+            self.h = h
+        else:
+            raise ValueError('Требуется ввести положительное число')
+        self.name = name
+        Clothes.all_fabric += self.fabric
+
+    def __str__(self):
+        return f'Костюм "{self.name}". Рост {self.h}.\nРасход ткани: {self.fabric}.'
+
+    @property
+    def fabric(self):
+        return round(self.h * 2 + 0.3 + 5 / 10 ** 8, 2)
+
+
+class_dict = {'1': Coat, '2': Suit}
+cloth_list = []
+while True:
+    type_inp = input('\nВведите 1 для создания пальто или 2 для создания костюма. Ничего не вводите для завершения: ')
+    if not type_inp:
+        break
+    elif type_inp == '1' or type_inp == '2':
+        param = input('Введите название и размер/рост через пробел: ')
+        try:
+            cloth_list.append(class_dict[type_inp](int(param.partition(' ')[2]), param.partition(' ')[0]))
+            print(cloth_list[-1])
+        except ValueError as error:
+            print(f'Ошибка ввода: {error}')
+    else:
+        print('Тип одежда может быть только 1 или 2')
+
+print('Список одежды:', *cloth_list, sep='\n')
+print(f'\nОбщий расход ткани: {Clothes.all_fabric}.')
