@@ -13,16 +13,18 @@ from abc import ABC, abstractmethod
 
 
 class Clothes(ABC):
-    all_fabric = 0
+    """Родительский абстрактный класс"""
+    all_fabric = 0  # счётчик расхода ткани на одежду
 
-    @abstractmethod
+    @abstractmethod     # проверка на переопределение
     def fabric(self):
         pass
 
 
 class Coat(Clothes):
-
+    """Дочерний класс одежды - пальто"""
     def __init__(self, v: int, name: str):
+        """Инициируем экземпляр наращивая счётчик расхода"""
         if v > 0:
             self.v = v
         else:
@@ -31,15 +33,17 @@ class Coat(Clothes):
         Clothes.all_fabric += self.fabric
 
     def __str__(self):
+        """Перегрузка str для удобства вывода"""
         return f'Пальто "{self.name}". Размер {self.v}.\nРасход ткани: {self.fabric}.'
 
     @property
     def fabric(self):
+        """Подсчёт расхода ткани с округлением. Представлен как атрибут"""
         return round(self.v / 6.5 + 0.5 + 5 / 10 ** 8, 2)
 
 
 class Suit(Clothes):
-
+    """Дочерний класс одежды - костюм, аналогичен классу пальто"""
     def __init__(self, h: int, name: str):
         if h > 0:
             self.h = h
@@ -56,21 +60,24 @@ class Suit(Clothes):
         return round(self.h * 2 + 0.3 + 5 / 10 ** 8, 2)
 
 
-class_dict = {'1': Coat, '2': Suit}
-cloth_list = []
+# ИСПОЛНЯЕМАЯ ЧАСТЬ
+class_dict = {'1': Coat, '2': Suit}     # словарь инициаторов классов
+cloth_list = []                         # список экземпляров
 while True:
+    # Запрос инициатора, пока не надоест
     type_inp = input('\nВведите 1 для создания пальто или 2 для создания костюма. Ничего не вводите для завершения: ')
-    if not type_inp:
+    if not type_inp:    # если пусто завершаем цикл
         break
-    elif type_inp == '1' or type_inp == '2':
+    elif type_inp == '1' or type_inp == '2':    # собираем экземпляр вызванного класса
         param = input('Введите название и размер/рост через пробел: ')
-        try:
+        try:    # если всё хорошо распиливаем строку параметров и выводим полученный экземпляр на экран
             cloth_list.append(class_dict[type_inp](int(param.partition(' ')[2]), param.partition(' ')[0]))
             print(cloth_list[-1])
         except ValueError as error:
-            print(f'Ошибка ввода: {error}')
+            print(f'Ошибка ввода: {error}')     # при неверном параметре на новый круг
     else:
-        print('Тип одежда может быть только 1 или 2')
+        print('Тип одежда может быть только 1 или 2')   # при неверном классе - на новый круг
 
+# выводим список одежды и суммарный расход ткани
 print('Список одежды:', *cloth_list, sep='\n')
 print(f'\nОбщий расход ткани: {Clothes.all_fabric}.')

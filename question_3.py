@@ -18,3 +18,45 @@ r"""
             где количество ячеек между \n равно переданному аргументу.
             Если ячеек на формирование ряда не хватает, то в последний ряд записываются все оставшиеся.
 """
+# Без комментариев -__-
+from random import randint
+
+
+class Cell:
+    def __init__(self, size: int):
+        self.size = size
+
+    def __add__(self, other):
+        return Cell(self.size + other.size)
+
+    def __sub__(self, other):
+        if other.size >= self.size:
+            return f"В клетке из {self.size} ячеек не может содержаться клетка из {other.size} ячеек."
+        else:
+            return Cell(self.size - other.size)
+
+    def __mul__(self, other):
+        return Cell(self.size * other.size)
+
+    def __floordiv__(self, other):
+        return Cell(self.size // other.size)
+
+    def __str__(self):
+        return self.make_order(randint(4, 10))
+
+    def make_order(self, raw):
+        return (('*' * raw + '\n') * (self.size // raw) + '*' * (self.size % raw) + '\n')[:-1]
+
+
+# ИСПОЛНЯЕМАЯ ЧАСТЬ КОДА
+while True:
+    cell1 = Cell(randint(1, 10))
+    cell2 = Cell(randint(1, 10))
+    print(cell1.size, cell2.size)
+    print('cell1 + cell2', cell1 + cell2, sep='\n')
+    print('cell1 - cell2', cell1 - cell2, sep='\n')
+    print('cell1 * cell2', cell1 * cell2, sep='\n')
+    print('cell1 // cell2', cell1 // cell2, sep='\n')
+    next_cells = input('Продолжить? Для выхода ничего не вводите: ')
+    if not next_cells:
+        break
