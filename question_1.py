@@ -56,8 +56,8 @@ class Matrix:
                     summ = self_item + other_item   # суммируем элементы строк
                     result[-1].append(summ)         # добавляем сумму в список результата
                 except TypeError:               # если элементы несуммируемы приводим их к строке и складываем
-                    str_s = self_item if type(self_item) == str else str(self_item)
-                    str_o = other_item if type(other_item) == str else str(other_item)
+                    str_s = str(self_item)
+                    str_o = str(other_item)
                     result[-1].append(str_s + str_o)
         return Matrix(result)   # возвращаем преобразованный в матрицу список списков
 
